@@ -45,7 +45,7 @@ RUN cd $HOME \
     && git clone https://github.com/ArduPilot/ardupilot \
     && cd ardupilot \
     && git checkout Copter-3.5 \
-    && git submodule update --init --recursive \
+    && git submodule update --init modules/waf \
     && ./waf configure --board sitl --prefix=$HOME/sitl \
     && ./waf build -j4 --target=bin/arducopter && ./waf install --target=bin/arducopter
 
