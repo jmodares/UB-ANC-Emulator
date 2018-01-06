@@ -64,7 +64,7 @@ function setup_emulator {
     cd $BASEDIR
     mkdir emulator emulator/mav
     cp build-emulator/engine/release/emulator emulator
-    cp UB-ANC-Emulator/script/build_objects.sh emulator
+    cp UB-ANC-Emulator/script/setup_objects.sh emulator
     cp UB-ANC-Emulator/script/start_emulator.sh emulator
     cp sitl/bin/arducopter emulator/mav
     cp ardupilot/Tools/autotest/default_params/copter.parm emulator/mav

@@ -16,14 +16,13 @@ You should have received a copy of the GNU General Public License along with thi
 UB-ANC Emulator is an emulation environment created to design, implement, and test various applications (missions) involving one or more drones in software, and provide seamless transition to experimentation. It provides flexibility in terms of the underlying flight dynamics and network simulation models. By default, it provides low-fidelity flight dynamics and network simulation, thus high scalability (it can support a large number of emulated agents). Depending on the application, it can connect to a high-fidelity physics engine for more accurate flight dynamics of agents (drones). It can also connect to a high-fidelity network simulation to model the effect of interference, packet losses, and protocols on network throughput, latency, and reliability (e.g., we have integrated [ns-3](https://www.nsnam.org) into the emulator). Another important aspect of the UB-ANC Emulator is its ability to be extended to different setups and connect to external communication hardware. This capability allows robotics researchers to emulate the mission planning part in software while the network researcher tests new network protocols on real hardware, or allows a network of real drones to connect to emulated drones and coordinate their tasks.
 
 ## Build
-The current version of UB-ANC Emulator uses [QGroundControl 3.2](http://qgroundcontrol.com) and [ns-3.27](https://www.nsnam.org) as its main libraries.
-The build process explained here is targeted for Linux platforms. In order to use the emulator on other platforms such as Windows, there is a docker image provided that can be used. Please read Docker section for more detail.
-These packages need to be install first:
+The current version of UB-ANC Emulator uses [QGroundControl 3.2](http://qgroundcontrol.com) and [ns-3.27](https://www.nsnam.org) as its main libraries. The build process explained here is targeted for Linux platforms. In order to use the emulator on other platforms such as Windows, you can use a virtual machine with Ubuntu 16.04 installed. There is also a docker image provided that can be used. Please read [Docker](#docker) section for more detail. These packages need to be install first:
 
 ```
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install build-essential libgl1-mesa-dev libsdl2-dev python-future libfontconfig1 dbus-x11 geoclue curl git netcat xvfb
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install build-essential \
+    libgl1-mesa-dev libsdl2-dev python-future \
+    libfontconfig1 dbus-x11 geoclue curl git netcat xvfb
 ```
 
 Then we can use `build_emulator.sh` to build and setup the emulator.
@@ -35,86 +34,107 @@ cd ub-anc
 curl -sSL https://raw.githubusercontent.com/jmodares/UB-ANC-Emulator/master/script/build_emulator.sh | bash
 ```
 
-The build process may take sometime. After the build finished, it has made a new directory **emulator** which has everything needed to run the emulator.
+The build process may take sometime. After the build finished, a new directory **emulator** has been provided which has everything needed to run the emulator.
 
-> You need to log out and log in again to run the emulator properly.
+> You need to logout and login again to run the emulator properly.
 
 ## Configuration
 UB-ANC Emulator uses **objects** directory to recognizes agents (drones) in the system. Every directory in the **objects** directory represents an emulated agent (drone). The naming format is **mav_xxx**, where xxx shows the ID, in the range **001 - 250**. In each **mav_xxx** directory there are three main files:
 * **agent**
   * The mission executable
-
 * **arducopter**
   * The firmware executable emulating the flight controller
-
 * **copter.parm**
   * The default parameters used in firmware
 
-This can be done by running `build_objects.sh n`, where `n` is the number of agents in the network.
+This can be done by running `setup_objects.sh n`, where `n` is the number of agents in the network.
 
 ```
 cd ~/ub-anc/emulator
-./build_objects.sh 10
+./setup_objects.sh 10
 ```
 
-To build the objects directory, the script uses all three default files from **mav** directory in **emulator**. By default the agent executable is the [follower](https://github.com/jmodares/follower) mission. To build and test different mission, you need to use [UB-ANC Agent](https://github.com/jmodares/UB-ANC-Agent), and put it in the **mav** directory.
+To setup the **objects** directory, the script uses all three default files from **mav** directory in **emulator**. By default the agent executable is the [follower](https://github.com/jmodares/follower) mission. To build and test different mission, you need to use [UB-ANC Agent](https://github.com/jmodares/UB-ANC-Agent), and put it in the **mav** directory.
 
 ## Run
-To run the emulator, use `start_emulator.sh`. It first starts all firmwares, waits for emulator to connect to all firmwares, and then starts all coresponding agents so that they can connect to the emulator.
+To run the emulator, use `start_emulator.sh`. It first starts all firmwares, waits for emulator to connect to all firmwares, and then starts all corresponding agents so that they can connect to the emulator.
 
 ```
 cd ~/ub-anc/emulator
 ./start_emulator.sh
 ```
 
-Note that you can not start the mission untill you recive these messages from drones:
+Note that you can not start the mission until you receive these messages from drones:
 
 ```
 [XXX] Info: EKF2 IMU0 is using GPS
 [XXX] Info: EKF2 IMU1 is using GPS
 ```
 
-Notice that all options that available to [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator, and you can set them in the script in *start_emulator* function. You can also utilize the logging capibiliies of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html).
+All options that are available to [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator, and you can set them in the script in *start_emulator* function. You can also utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html). As you can see in the `start_emulator.sh`, in *start_emulator* function, the emulator starts with **AODV** routing protocol when it runs in console mode. You can change or add more options if you need, especially you can change *RxGain, Reception gain (dB)* and see its effect during the mission.
 
-You can also run the emulator without gui:
+You can also run the emulator in console mode (without GUI):
 
 ```
 cd ~/ub-anc/emulator
 ./start_emulator.sh -c
 ```
 
-As you can see in the `start_emulator.sh`, in *start_emulator* function, the emulator starts with **AODV** routing protocol when it runs in console mode. You can change or add more options if you need, especially you can change *RxGain, Reception gain (dB)* and see its effect during the mission.
+This is useful when the GUI is not available or not needed. To visualize the agents (drones) when emulator runs in console mode, you need to install [QGroundControl](http://qgroundcontrol.com/downloads) and connect to the agents' corresponding ports.
 
 > It should be noted that port **10 * i + 5760** can be used to connect to agent (drone) **i**. 
 
 ## Docker
-There is a public docker image with UB-ANC Emulator installed and can be used:
-First you need to install [docker](https://docs.docker.com/engine/installation) engine. and then run `start_docker.sh n` where `n` is the number of agents.
-
-```
-cd ~/ub-anc
-curl -sSL https://raw.githubusercontent.com/jmodares/UB-ANC-Emulator/master/script/start_docker.sh -o start_docker.sh
-chmod +x start_docker.sh
-./start_docker.sh 10
-```
-
-After you login to the container, you can start by:
-
-```
-cp -r emulator /tmp
-cd /tmp/emulator
-./build_objects.sh 5
-./start_emulator.sh
-```
-
-By copying the **emulator** to the **/tmp/emulator**, you populate the container's emulator into the **docker** directory in the host.
-
-Note that as you can see the script is for Linux platforms. If you want to run it on other platforms, you need to map the XServer socket to the platform's descktop system, like [Xming](https://sourceforge.net/projects/xming/) for Windows. A better soplution is that you can start emulator in console mode, and install [QGroundControl](http://qgroundcontrol.com/downloads) and connect to specific port to visualize the agent (drone) in the system.
-
-If you want to buld the docker locally, you can use the following:
+There is a public docker image with UB-ANC Emulator installed which can be loaded and used. First you need to install [docker](https://docs.docker.com/engine/installation) engine. You can also build the docker image locally:
 
 ```
 docker build -t jmod/ub-anc-emulator:latest https://raw.githubusercontent.com/jmodares/UB-ANC-Emulator/master/script/Dockerfile
 ```
 
-> Check the scripts `start_emulator.sh` and `start_docker.sh` for more information.
+On Linux platform you can run the docker container and connect it to X Server on the host so that you can run the emulator in the container with GUI:
+
+```
+xauth nlist $DISPLAY \
+    | sed -e 's/^..../ffff/' \
+    | xauth -f /tmp/.docker.xauth nmerge -
+docker run -it \
+    --env DISPLAY=$DISPLAY \
+    --env XAUTHORITY=/tmp/.docker.xauth \
+    --volume /tmp/.X11-unix:/tmp/.X11-unix \
+    --volume /tmp/.docker.xauth:/tmp/.docker.xauth \
+    --device /dev/dri:/dev/dri \
+    --device /dev/snd:/dev/snd \
+    --volume $PWD/docker:/tmp/emulator \
+    --publish 5770:5770 \
+    --publish 5780:5780 \
+    jmod/ub-anc-emulator:latest
+```
+
+On other platforms though, you need to find a way to map the X Server socket between container and host, like [Xming](https://sourceforge.net/projects/xming/) for Windows. A better solution is to run the container without X Server mapping:
+
+```
+docker run -it \
+    --volume $PWD/docker:/tmp/emulator \
+    --publish 5770:5770 \
+    --publish 5780:5780 \
+    jmod/ub-anc-emulator:latest
+```
+
+Then you can start emulator in console mode, and use [QGroundControl](http://qgroundcontrol.com/downloads) on the host to connect to agent's port to visualize it in the system.
+
+Two things need to be notice:
+    -As you can see a new dictroty **docker** will be created on the host (in the current directory), and it mounts to **/tmp/emulator** directory on the container. This can be used to share files between the host and the container.
+    -In order to connect to a port in container, you need to publish it `--publish` to the host, as you can see in the previous commands we publish two ports so that we can connect to them with QGroundControl (running on the host).
+
+After you login to the container, you can start by:
+
+```
+cp -r emulator/ /tmp/
+cd /tmp/emulator
+```
+
+By copying the **emulator** to the **/tmp/emulator**, you populate the container's **emulator** directory into the **docker** directory in the host so that you have access to the files generated by emulator on the host.
+
+You can also use **docker** dirctory to put the mission source code and then build the mission using container.
+
+> Check all scripts in the **script** directory for more information.
