@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with thi
 UB-ANC Emulator is an emulation environment created to design, implement, and test various applications (missions) involving one or more drones in software, and provide seamless transition to experimentation. It provides flexibility in terms of the underlying flight dynamics and network simulation models. By default, it provides low-fidelity flight dynamics and network simulation, thus high scalability (it can support a large number of emulated agents). Depending on the application, it can connect to a high-fidelity physics engine for more accurate flight dynamics of agents (drones). It can also connect to a high-fidelity network simulation to model the effect of interference, packet losses, and protocols on network throughput, latency, and reliability (e.g., we have integrated [ns-3](https://www.nsnam.org) into the emulator). Another important aspect of the UB-ANC Emulator is its ability to be extended to different setups and connect to external communication hardware. This capability allows robotics researchers to emulate the mission planning part in software while the network researcher tests new network protocols on real hardware, or allows a network of real drones to connect to emulated drones and coordinate their tasks.
 
 ## Build
-The current version of UB-ANC Emulator uses [QGroundControl 3.2](http://qgroundcontrol.com) and [ns-3.27](https://www.nsnam.org) as its main libraries. The build process explained here is targeted for Linux platforms. In order to use the emulator on other platforms such as Windows, you can use a virtual machine with Ubuntu 16.04 installed. There is also a docker image provided that can be used. Please read [Docker](#docker) section for more detail. First, these packages need to be installed:
+The current version of UB-ANC Emulator uses [QGroundControl 3.2](http://qgroundcontrol.com) and [ns-3.27](https://www.nsnam.org) as its main libraries. The build process explained here is targeted for Linux (Debian compatible) platforms. In order to use the emulator on other platforms such as Windows, you can use a virtual machine with Ubuntu 16.04 installed. There is also a Docker image provided that can be used. Please read [Docker](#docker) section for more detail. First, these packages need to be installed:
 
 ```
 sudo apt-get update && sudo apt-get upgrade
@@ -73,7 +73,7 @@ Note that you can not start the mission until you receive these messages from dr
 [XXX] Info: EKF2 IMU1 is using GPS
 ```
 
-All options that are available to [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator, and you can set them in the script in *start_emulator* function. You can also utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html). As you can see in the *start_emulator* function, the emulator starts with **AODV** routing protocol when it runs in console mode. You can change or add more options if you need, especially you can change *RxGain, Reception gain (dB)* and see its effect during the mission.
+All options that are available to [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator, and you can set them in the script in *start_emulator* function. You can also utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html). As you can see in the *start_emulator* function, the emulator starts with **AODV** routing protocol when it runs in console mode. You can change or add more options if you need, especially you can change *RxGain, Reception gain (dB)*, or modulation and data rate, and see their effects during the mission.
 
 You can also run the emulator in console mode (without GUI):
 
@@ -87,14 +87,14 @@ This is useful when the GUI is not available or not needed. To visualize the age
 > It should be noted that port **10 * i + 5760** can be used to connect to agent (drone) **i**. 
 
 ## Docker
-There is a public docker image with UB-ANC Emulator installed which can be loaded and used. First you need to install [docker](https://docs.docker.com/engine/installation) engine. You can also build the docker image locally:
+There is a public Docker image with UB-ANC Emulator installed which can be loaded and used. First you need to install [Docker](https://docs.docker.com/engine/installation), and setup its [privilege access](https://docs.docker.com/engine/installation/linux/linux-postinstall/). You can also build the Docker image locally:
 
 ```
 docker build -t jmod/ub-anc-emulator:latest \
     https://raw.githubusercontent.com/jmodares/UB-ANC-Emulator/master/script/Dockerfile
 ```
 
-On Linux platforms you can run the docker container and connect it to X server on the host so that you can run the emulator in the container with GUI:
+If you don't build the image locally, Docker will download it automatically. On Linux platforms you can run Docker container and connect it to X server on the host so that you can run the emulator in the container with GUI:
 
 ```
 xauth nlist $DISPLAY \
@@ -138,6 +138,6 @@ cd /tmp/emulator
 
 By copying the **emulator** to the **/tmp/emulator**, you populate the container's **emulator** directory into the **docker** directory on the host so that you have access to the files generated by emulator later.
 
-You can also use **docker** dirctory to put the mission source code and then build the mission using container.
+You can also use **docker** dirctory to put the mission source code and then build the mission using container. Notice that the username and password is **ub-anc**.
 
 > Check all scripts in the **script** directory for more information.
