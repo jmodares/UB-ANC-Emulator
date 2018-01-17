@@ -29,8 +29,7 @@ Then we can use `build_emulator.sh` to build and setup the emulator.
 
 ```
 cd ~
-mkdir ub-anc
-cd ub-anc
+mkdir ub-anc && cd ub-anc
 curl -sSL \
     https://raw.githubusercontent.com/jmodares/UB-ANC-Emulator/master/script/build_emulator.sh \
     | bash
