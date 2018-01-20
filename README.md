@@ -65,7 +65,7 @@ cd ~/ub-anc/emulator
 ./start_emulator.sh
 ```
 
-Note that you can not start the mission until you receive these messages from drones:
+Note that you can not start the mission until you receive the following messages from drones, which will appear in the [Vehicle Messages](https://docs.qgroundcontrol.com/en/toolbar/toolbar.html) window in QGroundControl:
 
 ```
 [XXX] Info: EKF2 IMU0 is using GPS
@@ -125,7 +125,7 @@ docker run -it \
 Then you can start emulator in console mode, and use [QGroundControl](http://qgroundcontrol.com/downloads) on the host to connect to agent's port to visualize it in the system.
 
 Two things need to be noticed:
-* As you can see a new dictroty **docker** will be created on the host (in the current directory), and it will be mounted to **/tmp/emulator** directory on the container. This can be used to share files between the host and the container.
+* As you can see a new directory **docker** will be created on the host (in the current directory), and it will be mounted to **/tmp/emulator** directory on the container. This can be used to share files between the host and the container.
 * In order to connect to a port in container, you need to publish it `--publish` to the host, as you can see in the previous commands we publish two ports so that we can connect to them with QGroundControl (running on the host).
 
 After you login to the container, you can start by:
