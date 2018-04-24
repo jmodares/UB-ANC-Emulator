@@ -139,23 +139,36 @@ void UBObject::dataReadyEvent() {
         pkt.depacketize(*packet);
         packet->append(PACKET_END);
 
-        UBObject* dest = m_lnks->value(pkt.getDesID(), nullptr);
-        if (!dest) {
-            continue;
+        QList<uint8> ids;
+        if (pkt.getDesID() == BROADCAST_ID) {
+            ids = m_lnks->keys();
+        } else {
+            ids.append(pkt.getDesID());
         }
 
         if (m_range) {
-            if (!m_mav || !dest->getMAV() || m_mav->coordinate().distanceTo(dest->getMAV()->coordinate()) > m_range) {
-                continue;
+            for (uint8 id : ids) {
+                UBObject* dest = m_lnks->value(id, nullptr);
+
+                if (!m_mav || !dest || !dest->getMAV() || m_mav->coordinate().distanceTo(dest->getMAV()->coordinate()) > m_range) {
+                    continue;
+                }
+
+                QMetaObject::invokeMethod(dest, "sendData", Qt::QueuedConnection, Q_ARG(QByteArray, *packet));
             }
-
-            QMetaObject::invokeMethod(dest, "sendData", Qt::QueuedConnection, Q_ARG(QByteArray, *packet));
         } else {
-//            InetSocketAddress remote = InetSocketAddress(Ipv4Address::GetBroadcast(), PXY_PORT);
-//            InetSocketAddress remote = InetSocketAddress(Ipv4Address(tr("10.1.1.%1").arg(packet.getDesID()).toStdString().c_str()), PXY_PORT);
-            ns3::InetSocketAddress* remote = new ns3::InetSocketAddress(m_adrs->value(pkt.getDesID()), PXY_PORT);
+            for (uint8 id : ids) {
+                UBObject* dest = m_lnks->value(id, nullptr);
 
-            ns3::Simulator::ScheduleWithContext(m_node->GetId(), ns3::Seconds(0), &UBObject::dataReadyEventNS3, this, ns3::GetPointer(socket), (void*)packet, remote);
+                if (!dest) {
+                    continue;
+                }
+
+//                InetSocketAddress remote = InetSocketAddress(Ipv4Address::GetBroadcast(), PXY_PORT);
+//                InetSocketAddress remote = InetSocketAddress(Ipv4Address(tr("10.1.1.%1").arg(id).toStdString().c_str()), PXY_PORT);
+                ns3::InetSocketAddress* remote = new ns3::InetSocketAddress(m_adrs->value(id), PXY_PORT);
+                ns3::Simulator::ScheduleWithContext(m_node->GetId(), ns3::Seconds(0), &UBObject::dataReadyEventNS3, this, ns3::GetPointer(socket), (void*)packet, remote);
+            }
         }
     }
 }
