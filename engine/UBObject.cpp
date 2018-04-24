@@ -139,7 +139,7 @@ void UBObject::dataReadyEvent() {
         pkt.depacketize(*packet);
         packet->append(PACKET_END);
 
-        QList<uint8> ids;
+        QList<quint8> ids;
         if (pkt.getDesID() == BROADCAST_ID) {
             ids = m_lnks->keys();
         } else {
@@ -147,7 +147,7 @@ void UBObject::dataReadyEvent() {
         }
 
         if (m_range) {
-            for (uint8 id : ids) {
+            for (quint8 id : ids) {
                 UBObject* dest = m_lnks->value(id, nullptr);
 
                 if (!m_mav || !dest || !dest->getMAV() || m_mav->coordinate().distanceTo(dest->getMAV()->coordinate()) > m_range) {
@@ -157,7 +157,7 @@ void UBObject::dataReadyEvent() {
                 QMetaObject::invokeMethod(dest, "sendData", Qt::QueuedConnection, Q_ARG(QByteArray, *packet));
             }
         } else {
-            for (uint8 id : ids) {
+            for (quint8 id : ids) {
                 UBObject* dest = m_lnks->value(id, nullptr);
 
                 if (!dest) {
