@@ -132,18 +132,18 @@ void UBObject::dataReadyEvent() {
             return;
         }
 
-        QByteArray* packet = new QByteArray(m_buffer->left(bytes));
+        QByteArray qpkt = m_buffer->left(bytes);
         m_buffer->remove(0, bytes + qstrlen(PACKET_END));
 
-        UBPacket pkt;
-        pkt.depacketize(*packet);
-        packet->append(PACKET_END);
+        UBPacket upkt;
+        upkt.depacketize(qpkt);
+        qpkt.append(PACKET_END);
 
         QList<quint8> ids;
-        if (pkt.getDesID() == BROADCAST_ID) {
+        if (upkt.getDesID() == BROADCAST_ID) {
             ids = m_lnks->keys();
         } else {
-            ids.append(pkt.getDesID());
+            ids.append(upkt.getDesID());
         }
 
         if (m_range) {
@@ -154,7 +154,7 @@ void UBObject::dataReadyEvent() {
                     continue;
                 }
 
-                QMetaObject::invokeMethod(dest, "sendData", Qt::QueuedConnection, Q_ARG(QByteArray, *packet));
+                QMetaObject::invokeMethod(dest, "sendData", Qt::QueuedConnection, Q_ARG(QByteArray, qpkt));
             }
         } else {
             for (quint8 id : ids) {
@@ -166,8 +166,9 @@ void UBObject::dataReadyEvent() {
 
 //                InetSocketAddress remote = InetSocketAddress(Ipv4Address::GetBroadcast(), PXY_PORT);
 //                InetSocketAddress remote = InetSocketAddress(Ipv4Address(tr("10.1.1.%1").arg(id).toStdString().c_str()), PXY_PORT);
+                QByteArray* ppkt = new QByteArray(qpkt);
                 ns3::InetSocketAddress* remote = new ns3::InetSocketAddress(m_adrs->value(id), PXY_PORT);
-                ns3::Simulator::ScheduleWithContext(m_node->GetId(), ns3::Seconds(0), &UBObject::dataReadyEventNS3, this, ns3::GetPointer(socket), (void*)packet, remote);
+                ns3::Simulator::ScheduleWithContext(m_node->GetId(), ns3::Seconds(0), &UBObject::dataReadyEventNS3, this, ns3::GetPointer(socket), (void*)ppkt, remote);
             }
         }
     }
