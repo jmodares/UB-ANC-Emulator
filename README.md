@@ -20,7 +20,7 @@ The UB-ANC Emulator is an emulation environment created to design, implement, an
 > IMPORTANT: A file that is required to build the UB-ANC Emulator using the following instructions is no longer available. We are preparing an alternative build process and will update this README as soon as we resolve the problem.
 
 The current version of the UB-ANC Emulator uses [QGroundControl 3.2](http://qgroundcontrol.com) and [ns-3.27](https://www.nsnam.org) as its main libraries.
-The build process explained here is targeted for Linux (Debian) platforms. We recommend using [Ubuntu 16.04](http://releases.ubuntu.com/16.04/). If you would like to use the emulator on other platforms, such as Windows, we have also provided a docker image. Please read the [Docker](#Docker) section for more details.
+The build process explained here is targeted for Linux (Debian) platforms. We recommend using [Ubuntu 16.04](http://releases.ubuntu.com/16.04/). If you would like to use the emulator on other platforms, such as Windows, we have also provided a docker image. Please read the [Docker](#docker) section for more details.
 
 The following packages need to be installed before building the emulator:
 
