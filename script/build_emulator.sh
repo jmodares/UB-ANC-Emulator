@@ -8,18 +8,21 @@ fi
 
 function setup_qt {
     cd $BASEDIR
-    curl -SL https://s3-us-west-2.amazonaws.com/qgroundcontrol/dependencies/Qt5.7.1-linux-min.tar.bz2 | tar -xj
+    curl -SL  https://github.com/fghanei/UB-ANC-Dependencies/raw/185019653435fcb781d4fdda6511157adf917441/Qt5.7.1-linux-min.tar.bz2 | tar -xj
 
     echo "export PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/bin:\$PATH\"" >> $HOME/.profile
     echo "export LD_LIBRARY_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/lib:\$LD_LIBRARY_PATH\"" >> $HOME/.profile
     echo "export QML2_IMPORT_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/qml:\$QML2_IMPORT_PATH\"" >> $HOME/.profile
     echo "export QT_PLUGIN_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/plugins:\$QT_PLUGIN_PATH\"" >> $HOME/.profile
     . $HOME/.profile
+
+    echo "alias qmake='$BASEDIR/Qt5.7-linux/5.7/gcc_64/bin/qmake'" >> $HOME/.bash_aliases
+    . $HOME/.bash_aliases
 }
 
 function build_ns3 {
     cd $BASEDIR
-    curl -SL https://www.nsnam.org/release/ns-allinone-3.27.tar.bz2 | tar -xj
+    curl -SL https://github.com/fghanei/UB-ANC-Dependencies/raw/185019653435fcb781d4fdda6511157adf917441/ns-allinone-3.27.tar.bz2 | tar -xj
     cd ns-allinone-3.27/ns-3.27
     ./waf configure --build-profile=release \
             --disable-examples --disable-tests --disable-python \
@@ -92,5 +95,4 @@ build_emulator
 build_firmware
 build_mission
 setup_emulator
-
 clean_up
