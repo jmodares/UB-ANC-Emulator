@@ -17,8 +17,6 @@ The UB-ANC Emulator is an emulation environment created to design, implement, an
 
 ## Build
 
-> IMPORTANT: A file that is required to build the UB-ANC Emulator using the following instructions is no longer available. We are preparing an alternative build process and will update this README as soon as we resolve the problem.
-
 The current version of the UB-ANC Emulator uses [QGroundControl 3.2](http://qgroundcontrol.com) and [ns-3.27](https://www.nsnam.org) as its main libraries.
 The build process explained here is targeted for Linux (Debian) platforms. We recommend using [Ubuntu 16.04](http://releases.ubuntu.com/16.04/). If you would like to use the emulator on other platforms, such as Windows, we have also provided a docker image. Please read the [Docker](#docker) section for more details.
 
@@ -43,7 +41,14 @@ curl -sSL \
 
 The build process takes some time. After the build is finished, you will have a new directory **~/ub-anc/emulator/** that has everything needed to run the emulator.
 
-> IMPORTANT: You need to log out and log in again before you can run the emulator properly.
+Finally, you need to run the following command so you can access the serial port:
+
+```
+sudo usermod -a -G dialout $USER
+```
+
+> IMPORTANT: You need to log out and log in again before you can run the emulator.
+
 
 ## Configuration
 The UB-ANC Emulator uses the **objects** directory to recognize agents (drones) in the system. Every sub-directory in the **objects** directory represents an emulated agent. These sub-directories are named with the format **mav_xxx**, where *mav* stands for *micro air vehicle* and *xxx* denotes the MAV ID in the range **001 - 250**. There are three important files in each **mav_xxx** directory:
