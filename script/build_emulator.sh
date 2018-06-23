@@ -8,7 +8,7 @@ fi
 
 function setup_qt {
     cd $BASEDIR
-    curl -SL  https://github.com/fghanei/UB-ANC-Dependencies/raw/185019653435fcb781d4fdda6511157adf917441/Qt5.7.1-linux-min.tar.bz2 | tar -xj
+    curl -SL https://github.com/fghanei/UB-ANC-Dependencies/raw/185019653435fcb781d4fdda6511157adf917441/Qt5.7.1-linux-min.tar.bz2 | tar -xj
 
     echo "export PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/bin:\$PATH\"" >> $HOME/.profile
     echo "export LD_LIBRARY_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/lib:\$LD_LIBRARY_PATH\"" >> $HOME/.profile
