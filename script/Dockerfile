@@ -17,7 +17,7 @@ ENV HOME /home/ub-anc
 WORKDIR $HOME
 
 RUN cd $HOME \
-    && curl -SL https://s3-us-west-2.amazonaws.com/qgroundcontrol/dependencies/Qt5.7.1-linux-min.tar.bz2 | tar -xj
+    && curl -SL https://github.com/fghanei/UB-ANC-Dependencies/raw/185019653435fcb781d4fdda6511157adf917441/Qt5.7.1-linux-min.tar.bz2 | tar -xj
 
 ENV PATH=$HOME/Qt5.7-linux/5.7/gcc_64/bin:$PATH
 ENV LD_LIBRARY_PATH=$HOME/Qt5.7-linux/5.7/gcc_64/lib:$LD_LIBRARY_PATH
@@ -25,7 +25,7 @@ ENV QML2_IMPORT_PATH=$HOME/Qt5.7-linux/5.7/gcc_64/qml:$QML2_IMPORT_PATH
 ENV QT_PLUGIN_PATH=$HOME/Qt5.7-linux/5.7/gcc_64/plugins:$QT_PLUGIN_PATH
 
 RUN cd $HOME \
-    && curl -SL https://www.nsnam.org/release/ns-allinone-3.27.tar.bz2 | tar -xj \
+    && curl -SL https://github.com/fghanei/UB-ANC-Dependencies/raw/185019653435fcb781d4fdda6511157adf917441/ns-allinone-3.27.tar.bz2 | tar -xj \
     && cd ns-allinone-3.27/ns-3.27 \
     && ./waf configure --build-profile=release \
             --disable-examples --disable-tests --disable-python \
