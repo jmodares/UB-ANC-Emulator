@@ -87,11 +87,9 @@ Note that you cannot start the mission until you receive the following messages 
 > IMPORTANT: For more details on running the follower mission [click here](https://github.com/jmodares/follower)
 
 ## Advanced users
-All options that are available in [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator. These can be set in the *start_emulator* function in `start_emulator.sh`.
 
-You can utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html).
-
-You can also run the emulator without the GUI:
+### QGroundControl and ns-3 options
+All options that are available in [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator. These can be set in the *start_emulator* function in `start_emulator.sh`. For instance, you can utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html). You can also run the emulator without the GUI:
 
 ```
 cd ~/ub-anc/emulator
@@ -101,6 +99,10 @@ cd ~/ub-anc/emulator
 By default, the emulator is configured to start with the **AODV** routing protocol when it runs in console mode (see the *start_emulator* function in `start_emulator.sh`). You can change or add more options if you need to, e.g., *RxGain, Reception gain (dB)* and see their effect on the mission.
 
 > IMPORTANT: Port **10 * i + 5760** can be used to connect to agent (drone) **i**.
+
+### Output traces and logging
+By default, `start_emulator.sh` suppresses all messages from the agents by piping their outputs to **/dev/null**. This eliminates the overheads associated with logging and writing to the console, which allows the emulator to run with more agents. In many situations, however, it is useful to view information in the console in real-time and to log information for later analysis. You can modify `start_emulator.sh` to enable this functionality.
+
 
 ## Docker
 There is a public Docker image with UB-ANC Emulator installed which can be loaded and used. First you need to install [Docker](https://docs.docker.com/engine/installation), and setup its [privilege access](https://docs.docker.com/engine/installation/linux/linux-postinstall/). You can also build the Docker image locally:
