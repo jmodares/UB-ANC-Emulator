@@ -89,7 +89,10 @@ Note that you cannot start the mission until you receive the following messages 
 ## Advanced users
 
 ### QGroundControl and ns-3 options
-All options that are available in [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator. These can be set in the *start_emulator* function in `start_emulator.sh`. For instance, you can utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html). You can also run the emulator without the GUI:
+All options that are available in [QGroundControl](https://dev.qgroundcontrol.com/en/command_line_options.html) and [ns-3](https://www.nsnam.org/docs/tutorial/html/tweaking.html) are also available in the emulator. These can be set in the *start_emulator* function in `start_emulator.sh`. For instance, you can utilize the logging capabilities of [ns-3](https://www.nsnam.org/docs/manual/html/logging.html).
+
+### Start_emulator.sh options
+You can run the emulator without the GUI:
 
 ```
 cd ~/ub-anc/emulator
@@ -102,6 +105,8 @@ By default, the emulator is configured to start with the **AODV** routing protoc
 
 ### Output traces and logging
 By default, `start_emulator.sh` suppresses all messages from the agents by piping their outputs to **/dev/null**. This eliminates the overheads associated with logging and writing to the console, which allows the emulator to run with more agents. In many situations, however, it is useful to view information in the console in real-time and to log information for later analysis. You can modify `start_emulator.sh` to enable this functionality.
+
+For your convenience, we provide an alternative `start_emulator.sh` script with enhanced logging [here](https://github.com/nmastron/UB-ANC-Utilities).
 
 
 ## Docker
