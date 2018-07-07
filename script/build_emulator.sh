@@ -10,14 +10,11 @@ function setup_qt {
     cd $BASEDIR
     curl -SL https://raw.githubusercontent.com/fghanei/UB-ANC-Dependencies/master/Qt5.7.1-linux-min.tar.bz2 | tar -xj
 
-    echo "export PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/bin:\$PATH\"" >> $HOME/.profile
-    echo "export LD_LIBRARY_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/lib:\$LD_LIBRARY_PATH\"" >> $HOME/.profile
-    echo "export QML2_IMPORT_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/qml:\$QML2_IMPORT_PATH\"" >> $HOME/.profile
-    echo "export QT_PLUGIN_PATH=\"$BASEDIR/Qt5.7-linux/5.7/gcc_64/plugins:\$QT_PLUGIN_PATH\"" >> $HOME/.profile
-    . $HOME/.profile
-
-    echo "alias qmake='$BASEDIR/Qt5.7-linux/5.7/gcc_64/bin/qmake'" >> $HOME/.bash_aliases
-    . $HOME/.bash_aliases
+    echo export PATH=$BASEDIR/Qt5.7-linux/5.7/gcc_64/bin:\$PATH >> $BASEDIR/setup_emulator.sh
+    echo export LD_LIBRARY_PATH=$BASEDIR/Qt5.7-linux/5.7/gcc_64/lib:\$LD_LIBRARY_PATH >> $BASEDIR/setup_emulator.sh
+    echo export QML2_IMPORT_PATH=$BASEDIR/Qt5.7-linux/5.7/gcc_64/qml:\$QML2_IMPORT_PATH >> $BASEDIR/setup_emulator.sh
+    echo export QT_PLUGIN_PATH=$BASEDIR/Qt5.7-linux/5.7/gcc_64/plugins:\$QT_PLUGIN_PATH >> $BASEDIR/setup_emulator.sh
+    source $BASEDIR/setup_emulator.sh
 }
 
 function build_ns3 {
@@ -30,8 +27,8 @@ function build_ns3 {
     ./waf build -j4
     ./waf install
 
-    echo "export LD_LIBRARY_PATH=\"$BASEDIR/ns-3/lib:\$LD_LIBRARY_PATH\"" >> $HOME/.profile
-    . $HOME/.profile
+    echo export LD_LIBRARY_PATH=$BASEDIR/ns-3/lib:\$LD_LIBRARY_PATH >> $BASEDIR/setup_emulator.sh
+    source $BASEDIR/setup_emulator.sh
 }
 
 function build_emulator {
@@ -72,6 +69,7 @@ function setup_emulator {
     cp sitl/bin/arducopter emulator/mav
     cp ardupilot/Tools/autotest/default_params/copter.parm emulator/mav
     cp build-follower/agent/release/agent emulator/mav
+    cp $BASEDIR/setup_emulator.sh emulator
 }
 
 function clean_up {
@@ -82,7 +80,7 @@ function clean_up {
     cd build-follower
     make clean
     cd ..
-    rm -rf ns-allinone-3.27 UB-ANC-Emulator ardupilot follower
+    rm -rf ns-allinone-3.27 UB-ANC-Emulator ardupilot follower setup_emulator.sh
 
     exit
 }
