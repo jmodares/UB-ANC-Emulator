@@ -36,7 +36,7 @@ function build_emulator {
     git clone https://github.com/jmodares/UB-ANC-Emulator
     mkdir build-emulator
     cd build-emulator
-    $BASEDIR/Qt5.7-linux/5.7/gcc_64/bin/qmake ../UB-ANC-Emulator
+    qmake ../UB-ANC-Emulator
     make -j4
 }
 
@@ -56,7 +56,7 @@ function build_mission {
     git clone https://github.com/jmodares/follower
     mkdir build-follower
     cd build-follower
-    $BASEDIR/Qt5.7-linux/5.7/gcc_64/bin/qmake ../follower
+    qmake ../follower
     make -j4
 }
 
